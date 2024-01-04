@@ -1,0 +1,29 @@
+# robovision
+### State-of-The-Art Computer vision: Object Detection and Segmentation
+![](assets/example.png)
+
+Robovision is a simple, yet powerful software collection that is based on the YOLOv8 model and algorithms.
+Out-of-the-box usage is possible using the pretrained weights provided by ultralytics or the open-source community. 
+To fine-tune or pretrain a new model, use the robolabel tool to label your data, and drag and drop your files into train/valid/test.
+
+Also edit classes.txt and data.yaml accordingly: adjust the classes to be used.
+
+`python3 train.py`
+
+Use robolabel to easily label your data in a click of a button. 
+
+![](assets/flower.png)
+
+Dev dependencies:
+`pip install git+https://github.com/facebookresearch/segment-anything.git`
+
+`git clone https://github.com/ultralytics/ultralytics && cd ultralytics && pip install -e .`
+
+runtime dependencies:
+
+`pip install numpy onnxruntime opencv-python`
+
+
+## TODO
+* check with the team what more stuff do we need
+* Implement the more stuff we need
