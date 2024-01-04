@@ -24,7 +24,7 @@ calibration_sample_count = 0
 calibration_complete = False
 
 # Define known width and distance
-known_width = 76.1 / 1000  # Convert width from mm to meters - Galaxy a73 width for example
+known_width = 0.9
 known_distance = 1.0  # Distance from the camera in meters
 
 # Define class names
