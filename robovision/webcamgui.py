@@ -13,7 +13,7 @@ robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 object_widths = []
 object_angles = []
 
-focal_length = 1000  # Example value, replace with your actual value
+focal_length = 600  # Example value, replace with your actual value
 
 # Define class names
 while cap.isOpened():
