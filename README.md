@@ -12,13 +12,9 @@ Also edit classes.txt and data.yaml accordingly: adjust the classes to be used.
 
 Use labelme to easily label your data in a click of a button. 
 
-Dev dependencies:
+Dependencies:
 
-`pip install torch labelme`
-
-runtime dependencies:
-
-`pip install numpy onnxruntime opencv-python`
+`pip install numpy onnxruntime opencv-python torch labelme`
 
 
 ## TODO
