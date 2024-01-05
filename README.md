@@ -13,7 +13,6 @@ Also edit classes.txt and data.yaml accordingly: adjust the classes to be used.
 Use labelme to easily label your data in a click of a button. 
 
 Dev dependencies:
-`pip install git+https://github.com/facebookresearch/segment-anything.git`
 
 `pip install torch`
 
