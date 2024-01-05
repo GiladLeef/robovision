@@ -15,7 +15,7 @@ Use labelme to easily label your data in a click of a button.
 Dev dependencies:
 `pip install git+https://github.com/facebookresearch/segment-anything.git`
 
-`git clone https://github.com/ultralytics/ultralytics && cd ultralytics && pip install -e .`
+`pip install torch`
 
 runtime dependencies:
 
