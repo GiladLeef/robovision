@@ -15,6 +15,7 @@ Use labelme to easily label your data in a click of a button.
 Dev dependencies:
 
 `pip install torch`
+``pip install labelme`
 
 runtime dependencies:
 
