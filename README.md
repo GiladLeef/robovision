@@ -10,7 +10,7 @@ Also edit classes.txt and data.yaml accordingly: adjust the classes to be used.
 
 `python3 train.py`
 
-Use robolabel to easily label your data in a click of a button. 
+Use labelme to easily label your data in a click of a button. 
 
 ![](assets/flower.png)
 
