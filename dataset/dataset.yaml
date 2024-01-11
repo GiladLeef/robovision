@@ -1,0 +1,5 @@
+train: C:\Users\user\Desktop\robovision\dataset\images\train\
+val: C:\Users\user\Desktop\robovision\dataset\images\val\
+test: C:\Users\user\Desktop\robovision\dataset\images\test\
+nc: 1
+names: ["note"]
