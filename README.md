@@ -12,7 +12,7 @@ Use labelme to easily label your data in a click of a button.
 
 Dependencies:
 
-`pip install numpy onnxruntime opencv-python torch labelme`
+`pip install numpy ultralytics onnxruntime opencv-python torch labelme`
 
 
 ## TODO
