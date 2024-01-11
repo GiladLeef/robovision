@@ -6,7 +6,7 @@ from robovision.utils import class_names, class_width
 # Initialize the webcam
 cap = cv2.VideoCapture(0)
 
-model_path = "models/yolov8n-seg.onnx"
+model_path = "robovision\\models\\best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 
 # List to store object widths and angles

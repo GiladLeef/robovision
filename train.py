@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 def main():
     # Load a model
-    model = YOLO('dataset\\model.yaml')  # build a new model from YAML
+    model = YOLO('robovision\\models\\best.pt')  
     # Train the model
     results = model.train(data='dataset\\dataset.yaml', epochs=100, imgsz=640)
 
