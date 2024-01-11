@@ -5,7 +5,7 @@ class_names = ['note']
 
 # Example classes_width list (width in meters)
 class_width = [
-    0.3,  # note
+    0.3556,  # note
 ]
                       
 # Create a list of colors for each class where each color is a tuple of 3 integer values
