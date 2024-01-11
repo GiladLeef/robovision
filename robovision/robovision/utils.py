@@ -1,98 +1,11 @@
 import numpy as np
 import cv2
 
-class_names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-               'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
-               'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-               'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
-               'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-               'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-               'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard',
-               'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase',
-               'scissors', 'teddy bear', 'hair drier', 'toothbrush']
+class_names = ['note']
 
 # Example classes_width list (width in meters)
 class_width = [
-    1,  # person
-    1,  # bicycle
-    1,  # car
-    1,  # motorcycle
-    1,  # airplane
-    1,  # bus
-    1,  # train
-    1,  # truck
-    1,  # boat
-    1,  # traffic light
-    1,  # fire hydrant
-    1,  # stop sign
-    1,  # parking meter
-    1,  # bench
-    1,  # bird
-    1,  # cat
-    1,  # dog
-    1,  # horse
-    1,  # sheep
-    1,  # cow
-    1,  # elephant
-    1,  # bear
-    1,  # zebra
-    1,  # giraffe
-    1,  # backpack
-    1,  # umbrella
-    1,  # handbag
-    1,  # tie
-    1,  # suitcase
-    1,  # frisbee
-    1,  # skis
-    1,  # snowboard
-    1,  # sports ball
-    1,  # kite
-    1,  # baseball bat
-    1,  # baseball glove
-    1,  # skateboard
-    1,  # surfboard
-    1,  # tennis racket
-    1,  # bottle
-    1,  # wine glass
-    1,  # cup
-    1,  # fork
-    1,  # knife
-    1,  # spoon
-    1,  # bowl
-    1,  # banana
-    1,  # apple
-    1,  # sandwich
-    1,  # orange
-    1,  # broccoli
-    1,  # carrot
-    1,  # hot dog
-    1,  # pizza
-    1,  # donut
-    1,  # cake
-    1,  # chair
-    1,  # couch
-    1,  # potted plant
-    1,  # bed
-    1,  # dining table
-    1,  # toilet
-    1,  # tv
-    1,  # laptop
-    1,  # mouse
-    1,  # remote
-    1,  # keyboard
-    1,  # cell phone
-    1,  # microwave
-    1,  # oven
-    1,  # toaster
-    1,  # sink
-    1,  # refrigerator
-    1,  # book
-    1,  # clock
-    1,  # vase
-    1,  # scissors
-    1,  # teddy bear
-    1,  # hair drier
-    1,  # toothbrush
+    0.3,  # note
 ]
                       
 # Create a list of colors for each class where each color is a tuple of 3 integer values
