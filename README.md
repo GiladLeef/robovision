@@ -6,7 +6,7 @@ Robovision is a simple, yet powerful software collection that is based on the YO
 Out-of-the-box usage is possible using the pretrained weights provided by ultralytics or the open-source community. 
 To fine-tune or pretrain a new model, use the labelme tool to label your data, and use datatool to convert the json files into the correct dataset format.
 
-`python3 train.py`
+`python train.py`
 
 Use labelme to easily label your data in a click of a button. 
 
