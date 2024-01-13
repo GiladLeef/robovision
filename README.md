@@ -1,5 +1,5 @@
 # robovision
-### State-of-The-Art Computer vision: Object Detection and Segmentation
+### State-of-The-Art Computer Vision: Object Detection and Segmentation
 ![](assets/example.png)
 
 Robovision is a simple, yet powerful software collection that is based on the YOLOv8 model and algorithms.
