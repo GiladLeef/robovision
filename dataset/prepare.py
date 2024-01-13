@@ -20,9 +20,9 @@ def crop_and_save_image(input_path, output_path, target_size=(640, 480)):
         print(f"Error processing image {input_path}: {e}")
 
 def reorganize_crop_and_save_files(output_folder="output"):
-    current_dir = os.getcwd() + "\\output"
-    output_dir = os.path.join(current_dir, output_folder)
-
+    current_dir = os.getcwd() + "\\images"
+    output_dir = os.path.join(output_folder)
+    
     # Create the output folder if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
 
