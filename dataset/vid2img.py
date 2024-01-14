@@ -130,7 +130,7 @@ def write_exif_model(folder_path, model, fields=None):
 
 if __name__ == "__main__":
 
-    print( "Start Video2Frames script ...")
+    print("starting frames export...")
 
     parser = argparse.ArgumentParser(description="Video2Frames converter")
     parser.add_argument('input', metavar='<input_video_file>', help="Input video file")
