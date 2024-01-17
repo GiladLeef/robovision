@@ -2,6 +2,11 @@ import cv2
 import math
 from robovision import Robovision
 from robovision.utils import class_names, class_width
+from networktables import NetworkTables
+
+# Initialize NetworkTables
+NetworkTables.initialize(server='localhost')
+table = NetworkTables.getTable('Vision')
 
 # Initialize the webcam
 cap = cv2.VideoCapture(0)
@@ -61,6 +66,10 @@ while cap.isOpened():
         # Append the object width and angle to the lists
         object_widths.append(object_width_pixels)
         object_angles.append(angle_deg)
+        
+        # Update NetworkTables
+        table.putNumber(f"{class_name}_Distance", distance)
+        table.putNumber(f"{class_name}_Angle", angle_deg)
 
         # Print the values in real-time
         print(f"{class_name}: Distance={distance:.2f} meters, Angle={angle_deg:.2f} degrees")
