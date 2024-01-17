@@ -11,7 +11,7 @@ table = NetworkTables.getTable('Vision')
 # Initialize the webcam
 cap = cv2.VideoCapture(0)
 
-model_path = "models\\best.onnx"
+model_path = "models/best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 
 # List to store object information
