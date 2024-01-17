@@ -14,9 +14,8 @@ cap = cv2.VideoCapture(0)
 model_path = "models\\best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 
-# List to store object widths and angles
-object_widths = []
-object_angles = []
+# List to store object information
+objects = []
 
 focal_length = 600  # Example value, replace with your actual value
 
@@ -39,6 +38,7 @@ while cap.isOpened():
     center_y = frame_height // 2
 
     # Process object information
+    objects = []  # Clear the list for each frame
     for i, box in enumerate(boxes):
         class_id = class_ids[i]
 
@@ -63,16 +63,23 @@ while cap.isOpened():
         angle_rad = math.atan2(delta_y, delta_x)
         angle_deg = math.degrees(angle_rad)
 
-        # Append the object width and angle to the lists
-        object_widths.append(object_width_pixels)
-        object_angles.append(angle_deg)
-        
-        # Update NetworkTables
-        table.putNumber(f"{class_name}_Distance", distance)
-        table.putNumber(f"{class_name}_Angle", angle_deg)
+        # Append the object information to the list
+        objects.append({
+            'class_name': class_name,
+            'distance': distance,
+            'angle': angle_deg
+        })
+
+    # Sort objects by distance
+    objects.sort(key=lambda x: x['distance'])
+
+    # Update NetworkTables
+    for obj in objects:
+        table.putNumber(f"{obj['class_name']}_Distance", obj['distance'])
+        table.putNumber(f"{obj['class_name']}_Angle", obj['angle'])
 
         # Print the values in real-time
-        print(f"{class_name}: Distance={distance:.2f} meters, Angle={angle_deg:.2f} degrees")
+        print(f"{obj['class_name']}: Distance={obj['distance']:.2f} meters, Angle={obj['angle']:.2f} degrees")
 
 # Release resources
 cap.release()
