@@ -5,7 +5,7 @@ from robovision.utils import class_names, class_width
 from networktables import NetworkTables
 
 # Initialize NetworkTables
-NetworkTables.initialize(server='localhost')
+NetworkTables.initialize(server='localhost') # RoboRIO local IP
 table = NetworkTables.getTable('Vision')
 
 # Initialize the webcam
