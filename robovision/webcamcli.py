@@ -1,31 +1,21 @@
 import cv2
 import math
+from flask import Flask, jsonify
 from robovision import Robovision
 from robovision.utils import class_names, class_width
-from networktables import NetworkTables
 
-# Initialize NetworkTables
-NetworkTables.initialize(server='localhost') # RoboRIO local IP
-table = NetworkTables.getTable('Vision')
-
-# Initialize the webcam
-cap = cv2.VideoCapture(0)
+app = Flask(__name__)
 
 model_path = "models/best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
+cap = cv2.VideoCapture(0)
 
-# List to store object information
-objects = []
-
-focal_length = 600  # Example value, replace with your actual value
-
-# Define class names
-while cap.isOpened():
+def process_frame():
     # Read frame from the video
     ret, frame = cap.read()
 
     if not ret:
-        break
+        return None
 
     # Update object localizer
     boxes, scores, class_ids, masks = robovision(frame)
@@ -73,13 +63,23 @@ while cap.isOpened():
     # Sort objects by distance
     objects.sort(key=lambda x: x['distance'])
 
-    # Update NetworkTables
-    for obj in objects:
-        table.putNumber(f"{obj['class_name']}_Distance", obj['distance'])
-        table.putNumber(f"{obj['class_name']}_Angle", obj['angle'])
+    return objects
 
-        # Print the values in real-time
+# Define class names
+@app.route('/vision', methods=['GET'])
+def get_vision_data():
+    # List to store object information
+    objects = process_frame()
+
+    if objects is None:
+        return jsonify({'error': 'Failed to read frame'})
+
+    # Print the values in real-time
+    for obj in objects:
         print(f"{obj['class_name']}: Distance={obj['distance']:.2f} meters, Angle={obj['angle']:.2f} degrees")
 
-# Release resources
-cap.release()
+    # Return the JSON response
+    return jsonify(objects)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
