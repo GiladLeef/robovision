@@ -30,6 +30,11 @@ O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
 ```
 ## Angle calculation:
 ```python
+ # Calculate angle from the center of the object to the center of the frame
+
+object_center_x = (box[0] + box[2]) / 2
+object_center_y = (box[1] + box[3]) / 2
+
 delta_x = object_center_x - center_x
 delta_y = object_center_y - center_y
 
