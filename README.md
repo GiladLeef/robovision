@@ -28,3 +28,11 @@ The coordinates of the center of the detected object are calculated as follows:
 O_x = \frac{\text{box}[0] + \text{box}[2]}{2}
 O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
 ```
+## Calculate Angle in Radians:
+
+* Use the math.atan2 function to calculate the angle in radians based on the horizontal and vertical offsets.
+`angle_rad = math.atan2(delta_y, delta_x)`
+
+* Convert the angle from radians to degrees using the math.degrees function.
+
+`angle_deg = math.degrees(angle_rad)`
