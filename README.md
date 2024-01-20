@@ -39,7 +39,7 @@ Inference dependencies:
 
 Optional tools:
 
-`pip install labelme`
+`pip install labelme pynetworktables`
 
 ## Object Angle Calculation Formula
 
