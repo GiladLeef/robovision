@@ -1,19 +1,36 @@
-# robovision
+# Robovision
+
 Copyright (c) 2024 Gilad Leef. All rights reserved.
-### State-of-The-Art Computer Vision: Object Detection and Segmentation
-![](assets/example.png)
 
-Robovision is a simple, yet powerful software collection that is based on the YOLOv8 model and algorithms.
-Out-of-the-box usage is possible using the pretrained weights provided by ultralytics or the open-source community. 
-To fine-tune or pretrain a new model, use the labelme tool to label your data, and use datatool to convert the json files into the correct dataset format.
+## State-of-The-Art Computer Vision: Object Detection and Segmentation
 
-Train the model using:
+Welcome to Robovision, a cutting-edge software collection designed for state-of-the-art computer vision applications, specifically focusing on real-time object detection and segmentation. Developed by Gilad Leef, this project leverages the YOLOv8 model and sophisticated algorithms to provide a simple yet powerful solution for diverse computer vision tasks.
 
-`python train.py`
+## Introduction
+
+In the ever-evolving landscape of computer vision, Robovision stands out as a comprehensive toolkit, offering a range of features and functionalities to meet the demands of modern applications. Whether you are a researcher, developer, or enthusiast, Robovision empowers you to harness the potential of deep learning in your projects.
+
+## Features
+
+- **Real-time Object Detection and Segmentation:** Robovision excels in providing accurate and efficient real-time object detection and segmentation capabilities, making it a versatile choice for various applications.
+
+- **Out-of-the-Box Usage:** Get started quickly with pre-trained weights available from ultralytics or the open-source community. Robovision is ready to use, allowing you to dive into computer vision tasks without the need for extensive setup.
+
+- **Fine-tuning and Pretraining:** Customize and enhance the model to suit your specific needs. Use the labelme tool for intuitive data labeling and leverage the datatool for seamless dataset format conversion, enabling you to fine-tune or pretrain new models effortlessly.
+
+- **One-Click Dataset Generation:** Robovision simplifies the dataset generation process by supporting one-click creation from a single video file. This feature streamlines the data preparation phase, saving you valuable time and effort.
+
+## Usage
+
+To train the model, execute the following command:
+
+```bash
+python train.py
 
 Dependencies:
 
 `pip install numpy ultralytics onnxruntime opencv-python torch labelme`
+```
 
 The script calculates the angle of each detected object based on its position relative to the center of the frame. The formula used for angle calculation is as follows:
 
