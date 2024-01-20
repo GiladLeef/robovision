@@ -1,4 +1,5 @@
 # robovision
+Copyright (c) 2024 Gilad Leef. All rights reserved.
 ### State-of-The-Art Computer Vision: Object Detection and Segmentation
 ![](assets/example.png)
 
