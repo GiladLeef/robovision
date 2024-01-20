@@ -79,7 +79,8 @@ while True:
         for obj in objects:
             print(f"{obj['class_name']}: Distance={obj['distance']:.2f} meters, Angle={obj['angle']:.2f} degrees")
 
-        # Send data to NetworkTables
-        for i, obj in enumerate(objects):
-            table.putNumber(f'Object{i}/Distance', obj['distance'])
-            table.putNumber(f'Object{i}/Angle', obj['angle'])
+        # Send data to NetworkTables for the object with the lowest distance
+        if objects:
+            lowest_distance_object = objects[0]
+            table.putNumber('Distance', lowest_distance_object['distance'])
+            table.putNumber('Angle', lowest_distance_object['angle'])
