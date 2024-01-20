@@ -29,7 +29,6 @@ To train the model, execute the following command:
 python train.py
 ```
 
-```
 Training dependencies:
 
 `pip install numpy ultralytics opencv-python torch`
@@ -41,11 +40,8 @@ Inference dependencies:
 Optional tools:
 
 `pip install labelme`
-```
 
-The script calculates the angle of each detected object based on its position relative to the center of the frame. The formula used for angle calculation is as follows:
-
-# Object Angle Calculation Formula
+## Object Angle Calculation Formula
 
 This document provides a simplified explanation of the angle calculation formula used in the script. The formula calculates the angle of each detected object based on its position relative to the center of the frame.
 
