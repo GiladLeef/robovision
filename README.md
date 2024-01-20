@@ -27,10 +27,21 @@ To train the model, execute the following command:
 
 ```bash
 python train.py
+```
 
-Dependencies:
+```
+Training dependencies:
 
-`pip install numpy ultralytics onnxruntime opencv-python torch labelme`
+`pip install numpy ultralytics opencv-python torch`
+
+Inference dependencies:
+
+`pip install numpy onnxruntime opencv-python`
+
+Optional tools:
+
+`pip install labelme`
+
 ```
 
 The script calculates the angle of each detected object based on its position relative to the center of the frame. The formula used for angle calculation is as follows:
