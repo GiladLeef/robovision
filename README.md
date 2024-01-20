@@ -41,7 +41,6 @@ Inference dependencies:
 Optional tools:
 
 `pip install labelme`
-
 ```
 
 The script calculates the angle of each detected object based on its position relative to the center of the frame. The formula used for angle calculation is as follows:
