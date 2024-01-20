@@ -27,3 +27,4 @@ The coordinates of the center of the detected object are calculated as follows:
 ```math
 O_x = \frac{\text{box}[0] + \text{box}[2]}{2}
 O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
+```
