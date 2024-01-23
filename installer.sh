@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install pre-requisites
-sudo apt install -y curl libssl-dev libffi-dev
+sudo apt install -y curl git libssl-dev libffi-dev
 
 # Install pyenv
 curl -fsSL https://pyenv.run | bash
