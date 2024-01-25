@@ -68,7 +68,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 2. **Create a Virtual Environment:**
 
     ```bash
-    python -m venv venv
+    python3.10 -m venv venv
     ```
 
 3. **Activate the Virtual Environment:**
@@ -80,7 +80,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 4. **Install Dependencies:**
 
     ```bash
-    pip install numpy onnxruntime python-opencv
+    pip install numpy onnxruntime opencv-python
     ```
 
 5. **Run Robovision:**
