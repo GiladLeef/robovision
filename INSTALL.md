@@ -9,10 +9,10 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 
 ## Installing Python 3.10.9
 
-1. **Update Package Lists:**
+1. **Update Packages:**
 
     ```bash
-    sudo apt-get update
+    sudo apt-get update && sudo apt-get upgrade -y
     ```
 
 2. **Install Dependencies:**
@@ -24,7 +24,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 3. **Download Python 3.10.9 Source Code:**
 
     ```bash
-    wget https://www.python.org/ftp/python/3.10.9/Python-3.10.9.tgz
+    cd /opt  && wget https://www.python.org/ftp/python/3.10.9/Python-3.10.9.tgz
     ```
 
 4. **Extract the Archive:**
