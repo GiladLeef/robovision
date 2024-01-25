@@ -96,6 +96,5 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 
 - Make sure to adjust the number in the `-j` option in the `make` command based on the number of cores in your Raspberry Pi for faster compilation.
 
-- If you encounter any issues or want more information, refer to the [official Python documentation](https://docs.python.org/3/using/unix.html) and [Robovision documentation](https://robovision.ai/docs).
-
+- If you encounter any issues or want more information, refer to Gilad Leef.
 ---  
