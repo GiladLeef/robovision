@@ -86,7 +86,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 5. **Run Robovision:**
 
     ```bash
-    sudo su && cd /opt/robovision && source venv/bin/activate && python webcamntv.py
+    sudo su && cd /opt/robovision && source venv/bin/activate && python3.10 webcamntv.py
     ```
 
    This command switches to the superuser (`sudo su`), navigates to the Robovision directory, activates the virtual environment, and runs the `webcamntv.py` script.
