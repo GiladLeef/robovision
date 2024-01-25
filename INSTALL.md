@@ -18,7 +18,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 2. **Install Dependencies:**
 
     ```bash
-    sudo apt-get install -y build-essential zlib1g-dev libffi-dev libssl-dev libncurses5-dev libsqlite3-dev libreadline-dev libbz2-dev liblzma-dev libgdbm-dev tk-dev libdb-dev libpcap-dev
+    sudo apt-get install -y build-essential zlib1g-dev libffi-dev libssl-dev libncurses5-dev libsqlite3-dev libreadline-dev libbz2-dev liblzma-dev libgdbm-dev tk-dev libdb-dev libpcap-dev libgl1-mesa-glx
     ```
 
 3. **Download Python 3.10.9 Source Code:**
@@ -80,7 +80,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 4. **Install Dependencies:**
 
     ```bash
-    pip install numpy onnxruntime opencv-python
+    pip install numpy onnxruntime opencv-python pynetworktables
     ```
 
 5. **Run Robovision:**
