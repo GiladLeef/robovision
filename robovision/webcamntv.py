@@ -11,6 +11,7 @@ table = NetworkTables.getTable('Vision')
 model_path = "models/best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 cap = cv2.VideoCapture(0)
+focal_length = 600 
 
 def process_frame():
     # Read frame from the video
@@ -53,13 +54,12 @@ def process_frame():
         delta_y = object_center_y - center_y
 
         angle_rad = math.atan2(delta_y, delta_x)
-        angle_deg = math.degrees(angle_rad)
 
         # Append the object information to the list
         objects.append({
             'class_name': class_name,
             'distance': distance,
-            'angle': angle_deg
+            'angle': angle_rad
         })
 
     # Sort objects by distance
@@ -84,3 +84,7 @@ while True:
             lowest_distance_object = objects[0]
             table.putNumber('Distance', lowest_distance_object['distance'])
             table.putNumber('Angle', lowest_distance_object['angle'])
+        else:
+            # If no objects detected, write "0.0" values to NetworkTables
+            table.putNumber('Distance', 0.0)
+            table.putNumber('Angle', 0.0)
