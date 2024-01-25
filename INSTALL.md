@@ -4,7 +4,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 
 ## Prerequisites
 
-- Raspberry Pi with Raspbian OS (or compatible)
+- Raspberry Pi with a Debian-based system
 - Internet connection
 
 ## Installing Python 3.10.9
