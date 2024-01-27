@@ -1,6 +1,5 @@
 import cv2
 import math
-import time  # Import the time module
 from robovision import Robovision
 from robovision.utils import class_names, class_width
 from networktables import NetworkTables
@@ -97,6 +96,3 @@ while True:
             # If no objects detected, write "0.0" values to NetworkTables
             table.putNumber('Distance', 0.0)
             table.putNumber('Angle', 0.0)
-
-    # Introduce a delay to achieve the desired frame rate
-    time.sleep(frame_delay)
