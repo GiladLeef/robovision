@@ -62,12 +62,13 @@ def process_frame():
 
         # Calculate the deviation from the center of the screen
         deviation = center_x - object_center_x
+        scaled_deviation = (deviation / (frame_width // 2)) * 256
 
         # Append the object information to the list
         objects.append({
             'class_name': class_name,
             'distance': distance,
-            'angle': deviation  # Use deviation as the angle value
+            'angle': scaled_deviation
         })
 
         # Sort objects by distance
