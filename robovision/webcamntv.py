@@ -1,5 +1,6 @@
 import cv2
 import math
+import time  # Import the time module
 from robovision import Robovision
 from robovision.utils import class_names, class_width
 from networktables import NetworkTables
@@ -11,7 +12,11 @@ table = NetworkTables.getTable('Vision')
 model_path = "models/best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 cap = cv2.VideoCapture(0)
-focal_length = 600 
+focal_length = 600
+
+# Set the desired frame rate (in frames per second)
+desired_frame_rate = 5
+frame_delay = 1 / desired_frame_rate
 
 def process_frame():
     # Read frame from the video
@@ -53,17 +58,21 @@ def process_frame():
         delta_x = object_center_x - center_x
         delta_y = object_center_y - center_y
 
-        angle_rad = math.atan2(delta_y, delta_x)
+        # Calculate angle in degrees with positive values for the right and negative values for the left
+        angle_deg = math.degrees(math.atan2(delta_y, delta_x))
+
+        # Calculate the deviation from the center of the screen
+        deviation = center_x - object_center_x
 
         # Append the object information to the list
         objects.append({
             'class_name': class_name,
             'distance': distance,
-            'angle': angle_rad
+            'angle': deviation  # Use deviation as the angle value
         })
 
-    # Sort objects by distance
-    objects.sort(key=lambda x: x['distance'])
+        # Sort objects by distance
+        objects.sort(key=lambda x: x['distance'])
 
     return objects
 
@@ -88,3 +97,6 @@ while True:
             # If no objects detected, write "0.0" values to NetworkTables
             table.putNumber('Distance', 0.0)
             table.putNumber('Angle', 0.0)
+
+    # Introduce a delay to achieve the desired frame rate
+    time.sleep(frame_delay)
