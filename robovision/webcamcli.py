@@ -57,9 +57,6 @@ def process_frame():
         delta_x = object_center_x - center_x
         delta_y = object_center_y - center_y
 
-        # Calculate angle in degrees with positive values for the right and negative values for the left
-        angle_deg = math.degrees(math.atan2(delta_y, delta_x))
-
         # Calculate the deviation from the center of the screen
         deviation = center_x - object_center_x
         scaled_deviation = (deviation / (frame_width // 2)) * 256
