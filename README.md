@@ -57,12 +57,13 @@ O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
 ```python
  # Calculate angle from the center of the object to the center of the frame
 
-object_center_x = (box[0] + box[2]) / 2
-object_center_y = (box[1] + box[3]) / 2
-
 delta_x = object_center_x - center_x
 delta_y = object_center_y - center_y
 
-angle_rad = math.atan2(delta_y, delta_x)
-angle_deg = math.degrees(angle_rad)
+# Calculate angle in degrees with positive values for the right and negative values for the left
+angle_deg = math.degrees(math.atan2(delta_y, delta_x))
+
+# Calculate the deviation from the center of the screen
+deviation = center_x - object_center_x
+scaled_deviation = (deviation / (frame_width // 2)) * 256
 ```
