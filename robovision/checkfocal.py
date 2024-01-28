@@ -10,7 +10,7 @@ model_path = "models/yolov8n-seg.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 
 # List to store object widths and distances for the specified class
-target_class_name = "tv"  # Replace with your actual target class name
+target_class_name = "note"  # Replace with your actual target class name
 target_class_widths = []
 target_class_distances = []
 
@@ -24,7 +24,7 @@ calibration_sample_count = 0
 calibration_complete = False
 
 # Define known width and distance
-known_width = 0.9 # in meters
+known_width = 0.356 # in meters
 known_distance = 1.0  # Distance from the camera in meters
 
 # Define class names
