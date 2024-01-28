@@ -87,11 +87,44 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 5. **Run Robovision:**
 
     ```bash
-    sudo su && cd /opt/robovision && source venv/bin/activate && python3.10 webcamntv.py
+    sudo su && cd /opt/robovision && source venv/bin/activate && python3.10 main.py
     ```
 
-   This command switches to the superuser (`sudo su`), navigates to the Robovision directory, activates the virtual environment, and runs the `webcamntv.py` script.
+   This command switches to the superuser (`sudo su`), navigates to the Robovision directory, activates the virtual environment, and runs the `main.py` script.
+# RoboVision boot-time service
 
+## Setup
+
+1. **Create the service file:**
+   `
+   sudo nano /etc/systemd/system/robovision.service`
+   ```
+    [Unit]
+    Description=RoboVision Service
+    After=network.target
+    
+    [Service]
+    User=user
+    WorkingDirectory=/opt/robovision
+    Environment="PATH=/opt/robovision"
+    ExecStart=/bin/bash -c 'source venv/bin/activate && python main.py'
+    Restart=always
+    
+    [Install]
+    WantedBy=multi-user.target
+
+   ```
+   `sudo systemctl daemon-reload`
+   
+   `sudo systemctl enable robovision.service`
+   
+   `sudo systemctl start robovision.service`
+   
+
+   check it's status:
+   
+   `sudo systemctl status robovision.service`
+   
 ## Additional Notes
 
 - Make sure to adjust the number in the `-j` option in the `make` command based on the number of cores in your Raspberry Pi for faster compilation.
