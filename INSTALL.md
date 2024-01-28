@@ -1,4 +1,4 @@
-# Installing Python 3.10.9 and Running Robovision on Raspberry Pi
+# Installing Python 3.10.9 and running Robovision on Raspberry Pi
 
 This guide provides step-by-step instructions for installing Python 3.10.9 on a Raspberry Pi and running Robovision.
 
