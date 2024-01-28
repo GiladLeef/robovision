@@ -23,9 +23,9 @@ calibration_sample_count = 0
 # Flag to indicate if calibration is completed
 calibration_complete = False
 
-# Define known width and distance
-known_width = 0.3556 # in meters
-known_distance = 1.0  # Distance from the camera in meters
+# Define known width and distance in meters
+known_width = 0.3556
+known_distance = 1.0
 
 # Define class names
 while cap.isOpened() and not calibration_complete:
