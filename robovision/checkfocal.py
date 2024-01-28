@@ -24,7 +24,7 @@ calibration_sample_count = 0
 calibration_complete = False
 
 # Define known width and distance
-known_width = 0.356 # in meters
+known_width = 0.3556 # in meters
 known_distance = 1.0  # Distance from the camera in meters
 
 # Define class names
