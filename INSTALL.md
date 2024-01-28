@@ -87,10 +87,10 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
 5. **Run Robovision:**
 
     ```bash
-    sudo su && cd /opt/robovision && source venv/bin/activate && python3.10 main.py
+    sudo su && cd /opt/robovision && source venv/bin/activate && python3.10 webcamcli.py
     ```
 
-   This command switches to the superuser (`sudo su`), navigates to the Robovision directory, activates the virtual environment, and runs the `main.py` script.
+   This command switches to the superuser (`sudo su`), navigates to the Robovision directory, activates the virtual environment, and runs the `webcamcli.py` script.
 # RoboVision boot-time service
 
 ## Setup
@@ -107,7 +107,7 @@ This guide provides step-by-step instructions for installing Python 3.10.9 on a 
     User=user
     WorkingDirectory=/opt/robovision
     Environment="PATH=/opt/robovision"
-    ExecStart=/bin/bash -c 'source venv/bin/activate && python main.py'
+    ExecStart=/bin/bash -c 'source venv/bin/activate && python webcamcli.py'
     Restart=always
     
     [Install]
