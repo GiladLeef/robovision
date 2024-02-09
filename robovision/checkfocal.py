@@ -4,9 +4,9 @@ from robovision import Robovision
 from robovision.utils import class_names, class_width
 
 # Initialize the webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
-model_path = "models/yolov8n-seg.onnx"
+model_path = "models/best.onnx"
 robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
 
 # List to store object widths and distances for the specified class
@@ -23,9 +23,9 @@ calibration_sample_count = 0
 # Flag to indicate if calibration is completed
 calibration_complete = False
 
-# Define known width and distance in meters
-known_width = 0.3556
-known_distance = 1.0
+# Define known width and distance
+known_width = 0.3556 # in meters
+known_distance = 1.0  # Distance from the camera in meters
 
 # Define class names
 while cap.isOpened() and not calibration_complete:
@@ -62,14 +62,6 @@ while cap.isOpened() and not calibration_complete:
                 calibration_complete = True
                 break
 
-    # Display the frame in a window
-    cv2.imshow('Calibration', frame)
-
-    # Press key q to stop
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
-        break
-
 # Calculate the focal length using the collected data
 average_width = sum(target_class_widths) / len(target_class_widths)
 average_distance = sum(target_class_distances) / len(target_class_distances)
@@ -78,7 +70,6 @@ focal_length = (average_width * average_distance) / known_width
 
 # Release resources
 cap.release()
-cv2.destroyAllWindows()
 
 # Print the calculated focal length
 print("Calculated Focal Length:", focal_length)
