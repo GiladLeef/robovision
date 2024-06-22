@@ -4,22 +4,18 @@ Version 1.0, January 18, 2024
 
 Copyright (c) 2024 Gilad Leef. All rights reserved.
 
-1. GRANT OF LICENSE
-
-Subject to the terms and conditions of this License, Gilad Leef hereby grants to Elysium (Team number: 1937) ("Licensee"), a non-exclusive, non-transferable license to use the "robovision" software ("the Software").
-
-2. PERMITTED USES
+1. PERMITTED USES
 
 Licensee is granted the right to use, modify, and compile the Software solely for educational and non-commercial purposes.
 
-3. RESTRICTIONS
+2. RESTRICTIONS
 
 Licensee is expressly prohibited from:
    a. Commercial use of the Software.
    b. Distribution or sharing of the Software with third parties.
    c. Making derivative works based on the Software.
 
-4. COPYRIGHT NOTICE
+3. COPYRIGHT NOTICE
 
 Licensee shall include the following copyright notice in all copies or substantial portions of the Software:
 
@@ -27,20 +23,18 @@ Licensee shall include the following copyright notice in all copies or substanti
 
    Any awards or prizes received by Licensee in connection with the Software and its usage shall be dedicated to and received by Gilad Leef.
 
-5. DISCLAIMER OF WARRANTY
+4. DISCLAIMER OF WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-6. TERMINATION
+5. TERMINATION
 
 This License is effective until terminated by either party. Licensee may terminate it at any time by destroying all copies of the Software. This License will terminate immediately without notice from Gilad Leef if Licensee fails to comply with any provision of this License.
 
-7. GOVERNING LAW
+6. GOVERNING LAW
 
 This License shall be governed by and construed in accordance with the laws of the State of Israel.
 
-8. ACKNOWLEDGMENT
+7. ACKNOWLEDGMENT
 
 By using the "robovision" software, Licensee acknowledges that they have read and understood this License and agree to be bound by its terms and conditions.
-
-For questions or additional permissions, contact Gilad Leef at gilad.leef@gmail.com.
