@@ -5,7 +5,6 @@ import subprocess
 import json
 import cv2
 
-
 def main(args):
 
     if args.verbose:
