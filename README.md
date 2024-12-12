@@ -5,7 +5,7 @@ Copyright (c) 2024 Gilad Leef. All rights reserved. See LICENSE for more informa
 
 ## State-of-The-Art Computer Vision: Object Detection and Segmentation
 
-Welcome to Robovision, a cutting-edge software collection designed for state-of-the-art computer vision applications, specifically focusing on real-time object detection and segmentation. Developed by Gilad Leef, this project leverages the YOLOv8 model and sophisticated algorithms to provide a simple yet powerful solution for diverse computer vision tasks.
+Welcome to Robovision, a cutting-edge software collection designed for state-of-the-art computer vision applications, specifically focusing on real-time object detection and segmentation. Developed by Gilad Leef, this project leverages the YOLOv11 model and sophisticated algorithms to provide a simple yet powerful solution for diverse computer vision tasks.
 
 ## Introduction
 
