@@ -53,14 +53,3 @@ The coordinates of the center of the detected object are calculated as follows:
 O_x = \frac{\text{box}[0] + \text{box}[2]}{2}
 O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
 ```
-## Angle calculation:
-```python
- # Calculate angle from the center of the object to the center of the frame
-
-delta_x = object_center_x - center_x
-delta_y = object_center_y - center_y
-
-# Calculate the deviation from the center of the screen
-deviation = center_x - object_center_x
-scaled_deviation = (deviation / (frame_width // 2)) * 256
-```
