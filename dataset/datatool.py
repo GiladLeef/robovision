@@ -4,9 +4,6 @@ import sys
 from utils import Datatool
 
 def run():
-    '''
-    run cli
-    '''
     parser = argparse.ArgumentParser("datatool")
     parser.add_argument(
         "--json_dir", type=str, help="Please input the path of the labelme json files."
@@ -58,9 +55,9 @@ def run():
         args.json_dir, args.output_format, args.label_list)
 
     if args.json_name is None:
-        convertor.convert(val_size=args.val_size, test_size=args.test_size)
+        convertor.convert(valSize=args.val_size, testSize=args.test_size)
     else:
-        convertor.convert_one(args.json_name)
+        convertor.convertOne(args.json_name)
 
     return 0
 

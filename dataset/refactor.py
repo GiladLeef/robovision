@@ -1,48 +1,40 @@
 import os
 import shutil
 
-# Specify the path to your dataset folder
-dataset_folder = 'images'
+datasetFolder = 'images'
 
-# Specify the path to the output folder
-output_folder = 'output'
+outputFolder = 'output'
 
-# Create the output folder if it doesn't exist
-os.makedirs(output_folder, exist_ok=True)
+os.makedirs(outputFolder, exist_ok=True)
 
-# Get a list of all files in the folder
-all_files = os.listdir(dataset_folder)
+allFiles = os.listdir(datasetFolder)
 
-# Create a dictionary to store the pairs
-file_pairs = {}
+filePairs = {}
 
-# Iterate through all files and group them by the common number in the filename
-for file in all_files:
+for file in allFiles:
     name, extension = os.path.splitext(file)
     if extension == '.jpg' or extension == '.json':
-        file_pairs.setdefault(name, {})[extension] = file
+        filePairs.setdefault(name, {})[extension] = file
 
-# Sort the keys (common numbers) in the dictionary
-sorted_keys = sorted(file_pairs.keys(), key=lambda x: int(x))
+sortedKeys = sorted(filePairs.keys(), key=lambda x: int(x))
 
-# Iterate through the sorted keys and copy the files to the output folder
-for i, key in enumerate(sorted_keys, start=1):
-    pair = file_pairs[key]
+for i, key in enumerate(sortedKeys, start=1):
+    pair = filePairs[key]
     
-    jpg_file = pair.get('.jpg')
-    json_file = pair.get('.json')
+    jpgFile = pair.get('.jpg')
+    jsonFile = pair.get('.json')
 
-    if jpg_file and json_file:
-        new_jpg_name = f'{i}.jpg'
-        new_json_name = f'{i}.json'
+    if jpgFile and jsonFile:
+        newJpgName = f'{i}.jpg'
+        newJsonName = f'{i}.json'
 
-        jpg_path = os.path.join(dataset_folder, jpg_file)
-        json_path = os.path.join(dataset_folder, json_file)
+        jpgPath = os.path.join(datasetFolder, jpgFile)
+        jsonPath = os.path.join(datasetFolder, jsonFile)
 
-        new_jpg_path = os.path.join(output_folder, new_jpg_name)
-        new_json_path = os.path.join(output_folder, new_json_name)
+        newJpgPath = os.path.join(outputFolder, newJpgName)
+        newJsonPath = os.path.join(outputFolder, newJsonName)
 
-        shutil.copy(jpg_path, new_jpg_path)
-        shutil.copy(json_path, new_json_path)
+        shutil.copy(jpgPath, newJpgPath)
+        shutil.copy(jsonPath, newJsonPath)
 
-        print(f'Copied: {jpg_file} to {new_jpg_name}, {json_file} to {new_json_name}')
+        print(f'Copied: {jpgFile} to {newJpgName}, {jsonFile} to {newJsonName}')

@@ -1,63 +1,51 @@
 import numpy as np
 import cv2
 
-class_names = ['note']
+classNames = ['note']
 
-# Example classes_width list (width in meters)
-class_width = [
-    0.3556,  # note
+classWidth = [
+    0.3556,
 ]
                       
-# Create a list of colors for each class where each color is a tuple of 3 integer values
 rng = np.random.default_rng(3)
-colors = rng.uniform(0, 255, size=(len(class_names), 3))
+colors = rng.uniform(0, 255, size=(len(classNames), 3))
 
 
-def nms(boxes, scores, iou_threshold):
-    # Sort by score
-    sorted_indices = np.argsort(scores)[::-1]
+def nms(boxes, scores, iouThreshold):
+    sortedIndices = np.argsort(scores)[::-1]
 
-    keep_boxes = []
-    while sorted_indices.size > 0:
-        # Pick the last box
-        box_id = sorted_indices[0]
-        keep_boxes.append(box_id)
+    keepBoxes = []
+    while sortedIndices.size > 0:
+        boxId = sortedIndices[0]
+        keepBoxes.append(boxId)
 
-        # Compute IoU of the picked box with the rest
-        ious = compute_iou(boxes[box_id, :], boxes[sorted_indices[1:], :])
+        ious = computeIou(boxes[boxId, :], boxes[sortedIndices[1:], :])
 
-        # Remove boxes with IoU over the threshold
-        keep_indices = np.where(ious < iou_threshold)[0]
+        keepIndices = np.where(ious < iouThreshold)[0]
 
-        # print(keep_indices.shape, sorted_indices.shape)
-        sorted_indices = sorted_indices[keep_indices + 1]
+        sortedIndices = sortedIndices[keepIndices + 1]
 
-    return keep_boxes
+    return keepBoxes
 
 
-def compute_iou(box, boxes):
-    # Compute xmin, ymin, xmax, ymax for both boxes
+def computeIou(box, boxes):
     xmin = np.maximum(box[0], boxes[:, 0])
     ymin = np.maximum(box[1], boxes[:, 1])
     xmax = np.minimum(box[2], boxes[:, 2])
     ymax = np.minimum(box[3], boxes[:, 3])
 
-    # Compute intersection area
-    intersection_area = np.maximum(0, xmax - xmin) * np.maximum(0, ymax - ymin)
+    intersectionArea = np.maximum(0, xmax - xmin) * np.maximum(0, ymax - ymin)
 
-    # Compute union area
-    box_area = (box[2] - box[0]) * (box[3] - box[1])
-    boxes_area = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-    union_area = box_area + boxes_area - intersection_area
+    boxArea = (box[2] - box[0]) * (box[3] - box[1])
+    boxesArea = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+    unionArea = boxArea + boxesArea - intersectionArea
 
-    # Compute IoU
-    iou = intersection_area / union_area
+    iou = intersectionArea / unionArea
 
     return iou
 
 
 def xywh2xyxy(x):
-    # Convert bounding box (x, y, w, h) to bounding box (x1, y1, x2, y2)
     y = np.copy(x)
     y[..., 0] = x[..., 0] - x[..., 2] / 2
     y[..., 1] = x[..., 1] - x[..., 3] / 2
@@ -70,61 +58,57 @@ def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 
-def draw_detections(image, boxes, scores, class_ids, mask_alpha=0.3, mask_maps=None):
-    img_height, img_width = image.shape[:2]
-    size = min([img_height, img_width]) * 0.0006
-    text_thickness = int(min([img_height, img_width]) * 0.001)
+def drawDetections(image, boxes, scores, classIds, maskAlpha=0.3, maskMaps=None):
+    imgHeight, imgWidth = image.shape[:2]
+    size = min([imgHeight, imgWidth]) * 0.0006
+    textThickness = int(min([imgHeight, imgWidth]) * 0.001)
 
-    mask_img = draw_masks(image, boxes, class_ids, mask_alpha, mask_maps)
+    maskImg = drawMasks(image, boxes, classIds, maskAlpha, maskMaps)
 
-    # Draw bounding boxes and labels of detections
-    for box, score, class_id in zip(boxes, scores, class_ids):
-        color = colors[class_id]
+    for box, score, classId in zip(boxes, scores, classIds):
+        color = colors[classId]
 
         x1, y1, x2, y2 = box.astype(int)
 
-        # Draw rectangle
-        cv2.rectangle(mask_img, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(maskImg, (x1, y1), (x2, y2), color, 2)
 
-        label = class_names[class_id]
+        label = classNames[classId]
         caption = f'{label} {int(score * 100)}%'
         (tw, th), _ = cv2.getTextSize(text=caption, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                      fontScale=size, thickness=text_thickness)
+                                      fontScale=size, thickness=textThickness)
         th = int(th * 1.2)
 
-        cv2.rectangle(mask_img, (x1, y1),
+        cv2.rectangle(maskImg, (x1, y1),
                       (x1 + tw, y1 - th), color, -1)
 
-        cv2.putText(mask_img, caption, (x1, y1),
-                    cv2.FONT_HERSHEY_SIMPLEX, size, (255, 255, 255), text_thickness, cv2.LINE_AA)
+        cv2.putText(maskImg, caption, (x1, y1),
+                    cv2.FONT_HERSHEY_SIMPLEX, size, (255, 255, 255), textThickness, cv2.LINE_AA)
 
-    return mask_img
+    return maskImg
 
 
-def draw_masks(image, boxes, class_ids, mask_alpha=0.3, mask_maps=None):
-    mask_img = image.copy()
+def drawMasks(image, boxes, classIds, maskAlpha=0.3, maskMaps=None):
+    maskImg = image.copy()
 
-    # Draw bounding boxes and labels of detections
-    for i, (box, class_id) in enumerate(zip(boxes, class_ids)):
-        color = colors[class_id]
+    for i, (box, classId) in enumerate(zip(boxes, classIds)):
+        color = colors[classId]
 
         x1, y1, x2, y2 = box.astype(int)
 
-        # Draw fill mask image
-        if mask_maps is None:
-            cv2.rectangle(mask_img, (x1, y1), (x2, y2), color, -1)
+        if maskMaps is None:
+            cv2.rectangle(maskImg, (x1, y1), (x2, y2), color, -1)
         else:
-            crop_mask = mask_maps[i][y1:y2, x1:x2, np.newaxis]
-            crop_mask_img = mask_img[y1:y2, x1:x2]
-            crop_mask_img = crop_mask_img * (1 - crop_mask) + crop_mask * color
-            mask_img[y1:y2, x1:x2] = crop_mask_img
+            cropMask = maskMaps[i][y1:y2, x1:x2, np.newaxis]
+            cropMaskImg = maskImg[y1:y2, x1:x2]
+            cropMaskImg = cropMaskImg * (1 - cropMask) + cropMask * color
+            maskImg[y1:y2, x1:x2] = cropMaskImg
 
-    return cv2.addWeighted(mask_img, mask_alpha, image, 1 - mask_alpha, 0)
+    return cv2.addWeighted(maskImg, maskAlpha, image, 1 - maskAlpha, 0)
 
 
-def draw_comparison(img1, img2, name1, name2, fontsize=2.6, text_thickness=3):
+def drawComparison(img1, img2, name1, name2, fontsize=2.6, textThickness=3):
     (tw, th), _ = cv2.getTextSize(text=name1, fontFace=cv2.FONT_HERSHEY_DUPLEX,
-                                  fontScale=fontsize, thickness=text_thickness)
+                                  fontScale=fontsize, thickness=textThickness)
     x1 = img1.shape[1] // 3
     y1 = th
     offset = th // 5
@@ -133,10 +117,10 @@ def draw_comparison(img1, img2, name1, name2, fontsize=2.6, text_thickness=3):
     cv2.putText(img1, name1,
                 (x1, y1),
                 cv2.FONT_HERSHEY_DUPLEX, fontsize,
-                (255, 255, 255), text_thickness)
+                (255, 255, 255), textThickness)
 
     (tw, th), _ = cv2.getTextSize(text=name2, fontFace=cv2.FONT_HERSHEY_DUPLEX,
-                                  fontScale=fontsize, thickness=text_thickness)
+                                  fontScale=fontsize, thickness=textThickness)
     x1 = img2.shape[1] // 3
     y1 = th
     offset = th // 5
@@ -146,10 +130,10 @@ def draw_comparison(img1, img2, name1, name2, fontsize=2.6, text_thickness=3):
     cv2.putText(img2, name2,
                 (x1, y1),
                 cv2.FONT_HERSHEY_DUPLEX, fontsize,
-                (255, 255, 255), text_thickness)
+                (255, 255, 255), textThickness)
 
-    combined_img = cv2.hconcat([img1, img2])
-    if combined_img.shape[1] > 3840:
-        combined_img = cv2.resize(combined_img, (3840, 2160))
+    combinedImg = cv2.hconcat([img1, img2])
+    if combinedImg.shape[1] > 3840:
+        combinedImg = cv2.resize(combinedImg, (3840, 2160))
 
-    return combined_img
+    return combinedImg

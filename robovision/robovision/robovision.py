@@ -4,178 +4,161 @@ import cv2
 import numpy as np
 import onnxruntime
 
-from robovision.utils import xywh2xyxy, nms, draw_detections, sigmoid
+from robovision.utils import xywh2xyxy, nms, drawDetections, sigmoid
 
 class Robovision:
 
-    def __init__(self, path, conf_thres=0.7, iou_thres=0.5, num_masks=32):
-        self.conf_threshold = conf_thres
-        self.iou_threshold = iou_thres
-        self.num_masks = num_masks
+    def __init__(self, path, confThres=0.7, iouThres=0.5, numMasks=32):
+        self.confThreshold = confThres
+        self.iouThreshold = iouThres
+        self.numMasks = numMasks
 
-        # Initialize model
-        self.initialize_model(path)
+        self.initializeModel(path)
 
     def __call__(self, image):
-        return self.segment_objects(image)
+        return self.segmentObjects(image)
 
-    def initialize_model(self, path):
+    def initializeModel(self, path):
         self.session = onnxruntime.InferenceSession(path,
                                                     providers=['CUDAExecutionProvider',
                                                                'CPUExecutionProvider'])
-        # Get model info
-        self.get_input_details()
-        self.get_output_details()
+        self.getInputDetails()
+        self.getOutputDetails()
 
-    def segment_objects(self, image):
-        input_tensor = self.prepare_input(image)
+    def segmentObjects(self, image):
+        inputTensor = self.prepareInput(image)
 
-        # Perform inference on the image
-        outputs = self.inference(input_tensor)
+        outputs = self.inference(inputTensor)
 
-        self.boxes, self.scores, self.class_ids, mask_pred = self.process_box_output(outputs[0])
-        self.mask_maps = self.process_mask_output(mask_pred, outputs[1])
+        self.boxes, self.scores, self.classIds, maskPred = self.processBoxOutput(outputs[0])
+        self.maskMaps = self.processMaskOutput(maskPred, outputs[1])
 
-        return self.boxes, self.scores, self.class_ids, self.mask_maps
+        return self.boxes, self.scores, self.classIds, self.maskMaps
 
-    def prepare_input(self, image):
-        self.img_height, self.img_width = image.shape[:2]
+    def prepareInput(self, image):
+        self.imgHeight, self.imgWidth = image.shape[:2]
 
-        input_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        inputImg = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        # Resize input image
-        input_img = cv2.resize(input_img, (self.input_width, self.input_height))
+        inputImg = cv2.resize(inputImg, (self.inputWidth, self.inputHeight))
 
-        # Scale input pixel values to 0 to 1
-        input_img = input_img / 255.0
-        input_img = input_img.transpose(2, 0, 1)
-        input_tensor = input_img[np.newaxis, :, :, :].astype(np.float32)
+        inputImg = inputImg / 255.0
+        inputImg = inputImg.transpose(2, 0, 1)
+        inputTensor = inputImg[np.newaxis, :, :, :].astype(np.float32)
 
-        return input_tensor
+        return inputTensor
 
-    def inference(self, input_tensor):
+    def inference(self, inputTensor):
         start = time.perf_counter()
-        outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
+        outputs = self.session.run(self.outputNames, {self.inputNames[0]: inputTensor})
 
         print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
         return outputs
 
-    def process_box_output(self, box_output):
+    def processBoxOutput(self, boxOutput):
 
-        predictions = np.squeeze(box_output).T
-        num_classes = box_output.shape[1] - self.num_masks - 4
+        predictions = np.squeeze(boxOutput).T
+        numClasses = boxOutput.shape[1] - self.numMasks - 4
 
-        # Filter out object confidence scores below threshold
-        scores = np.max(predictions[:, 4:4+num_classes], axis=1)
-        predictions = predictions[scores > self.conf_threshold, :]
-        scores = scores[scores > self.conf_threshold]
+        scores = np.max(predictions[:, 4:4+numClasses], axis=1)
+        predictions = predictions[scores > self.confThreshold, :]
+        scores = scores[scores > self.confThreshold]
 
         if len(scores) == 0:
             return [], [], [], np.array([])
 
-        box_predictions = predictions[..., :num_classes+4]
-        mask_predictions = predictions[..., num_classes+4:]
+        boxPredictions = predictions[..., :numClasses+4]
+        maskPredictions = predictions[..., numClasses+4:]
 
-        # Get the class with the highest confidence
-        class_ids = np.argmax(box_predictions[:, 4:], axis=1)
+        classIds = np.argmax(boxPredictions[:, 4:], axis=1)
 
-        # Get bounding boxes for each object
-        boxes = self.extract_boxes(box_predictions)
+        boxes = self.extractBoxes(boxPredictions)
 
-        # Apply non-maxima suppression to suppress weak, overlapping bounding boxes
-        indices = nms(boxes, scores, self.iou_threshold)
+        indices = nms(boxes, scores, self.iouThreshold)
 
-        return boxes[indices], scores[indices], class_ids[indices], mask_predictions[indices]
+        return boxes[indices], scores[indices], classIds[indices], maskPredictions[indices]
 
-    def process_mask_output(self, mask_predictions, mask_output):
+    def processMaskOutput(self, maskPredictions, maskOutput):
 
-        if mask_predictions.shape[0] == 0:
+        if maskPredictions.shape[0] == 0:
             return []
 
-        mask_output = np.squeeze(mask_output)
+        maskOutput = np.squeeze(maskOutput)
 
-        # Calculate the mask maps for each box
-        num_mask, mask_height, mask_width = mask_output.shape  # CHW
-        masks = sigmoid(mask_predictions @ mask_output.reshape((num_mask, -1)))
-        masks = masks.reshape((-1, mask_height, mask_width))
+        numMask, maskHeight, maskWidth = maskOutput.shape
+        masks = sigmoid(maskPredictions @ maskOutput.reshape((numMask, -1)))
+        masks = masks.reshape((-1, maskHeight, maskWidth))
 
-        # Downscale the boxes to match the mask size
-        scale_boxes = self.rescale_boxes(self.boxes,
-                                   (self.img_height, self.img_width),
-                                   (mask_height, mask_width))
+        scaleBoxes = self.rescaleBoxes(self.boxes,
+                                   (self.imgHeight, self.imgWidth),
+                                   (maskHeight, maskWidth))
 
-        # For every box/mask pair, get the mask map
-        mask_maps = np.zeros((len(scale_boxes), self.img_height, self.img_width))
-        blur_size = (int(self.img_width / mask_width), int(self.img_height / mask_height))
-        for i in range(len(scale_boxes)):
+        maskMaps = np.zeros((len(scaleBoxes), self.imgHeight, self.imgWidth))
+        blurSize = (int(self.imgWidth / maskWidth), int(self.imgHeight / maskHeight))
+        for i in range(len(scaleBoxes)):
 
-            scale_x1 = int(math.floor(scale_boxes[i][0]))
-            scale_y1 = int(math.floor(scale_boxes[i][1]))
-            scale_x2 = int(math.ceil(scale_boxes[i][2]))
-            scale_y2 = int(math.ceil(scale_boxes[i][3]))
+            scaleX1 = int(math.floor(scaleBoxes[i][0]))
+            scaleY1 = int(math.floor(scaleBoxes[i][1]))
+            scaleX2 = int(math.ceil(scaleBoxes[i][2]))
+            scaleY2 = int(math.ceil(scaleBoxes[i][3]))
 
             x1 = int(math.floor(self.boxes[i][0]))
             y1 = int(math.floor(self.boxes[i][1]))
             x2 = int(math.ceil(self.boxes[i][2]))
             y2 = int(math.ceil(self.boxes[i][3]))
 
-            scale_crop_mask = masks[i][scale_y1:scale_y2, scale_x1:scale_x2]
-            crop_mask = cv2.resize(scale_crop_mask,
+            scaleCropMask = masks[i][scaleY1:scaleY2, scaleX1:scaleX2]
+            cropMask = cv2.resize(scaleCropMask,
                               (x2 - x1, y2 - y1),
                               interpolation=cv2.INTER_CUBIC)
 
-            crop_mask = cv2.blur(crop_mask, blur_size)
+            cropMask = cv2.blur(cropMask, blurSize)
 
-            crop_mask = (crop_mask > 0.5).astype(np.uint8)
-            mask_maps[i, y1:y2, x1:x2] = crop_mask
+            cropMask = (cropMask > 0.5).astype(np.uint8)
+            maskMaps[i, y1:y2, x1:x2] = cropMask
 
-        return mask_maps
+        return maskMaps
 
-    def extract_boxes(self, box_predictions):
-        # Extract boxes from predictions
-        boxes = box_predictions[:, :4]
+    def extractBoxes(self, boxPredictions):
+        boxes = boxPredictions[:, :4]
 
-        # Scale boxes to original image dimensions
-        boxes = self.rescale_boxes(boxes,
-                                   (self.input_height, self.input_width),
-                                   (self.img_height, self.img_width))
+        boxes = self.rescaleBoxes(boxes,
+                                   (self.inputHeight, self.inputWidth),
+                                   (self.imgHeight, self.imgWidth))
 
-        # Convert boxes to xyxy format
         boxes = xywh2xyxy(boxes)
 
-        # Check the boxes are within the image
-        boxes[:, 0] = np.clip(boxes[:, 0], 0, self.img_width)
-        boxes[:, 1] = np.clip(boxes[:, 1], 0, self.img_height)
-        boxes[:, 2] = np.clip(boxes[:, 2], 0, self.img_width)
-        boxes[:, 3] = np.clip(boxes[:, 3], 0, self.img_height)
+        boxes[:, 0] = np.clip(boxes[:, 0], 0, self.imgWidth)
+        boxes[:, 1] = np.clip(boxes[:, 1], 0, self.imgHeight)
+        boxes[:, 2] = np.clip(boxes[:, 2], 0, self.imgWidth)
+        boxes[:, 3] = np.clip(boxes[:, 3], 0, self.imgHeight)
 
         return boxes
 
-    def draw_detections(self, image, draw_scores=True, mask_alpha=0.4):
-        return draw_detections(image, self.boxes, self.scores,
-                               self.class_ids, mask_alpha)
+    def drawDetections(self, image, drawScores=True, maskAlpha=0.4):
+        return drawDetections(image, self.boxes, self.scores,
+                               self.classIds, maskAlpha)
 
-    def draw_masks(self, image, draw_scores=True, mask_alpha=0.5):
-        return draw_detections(image, self.boxes, self.scores,
-                               self.class_ids, mask_alpha, mask_maps=self.mask_maps)
+    def drawMasks(self, image, drawScores=True, maskAlpha=0.5):
+        return drawDetections(image, self.boxes, self.scores,
+                               self.classIds, maskAlpha, maskMaps=self.maskMaps)
 
-    def get_input_details(self):
-        model_inputs = self.session.get_inputs()
-        self.input_names = [model_inputs[i].name for i in range(len(model_inputs))]
+    def getInputDetails(self):
+        modelInputs = self.session.get_inputs()
+        self.inputNames = [modelInputs[i].name for i in range(len(modelInputs))]
 
-        self.input_shape = model_inputs[0].shape
-        self.input_height = self.input_shape[2]
-        self.input_width = self.input_shape[3]
+        self.inputShape = modelInputs[0].shape
+        self.inputHeight = self.inputShape[2]
+        self.inputWidth = self.inputShape[3]
 
-    def get_output_details(self):
-        model_outputs = self.session.get_outputs()
-        self.output_names = [model_outputs[i].name for i in range(len(model_outputs))]
+    def getOutputDetails(self):
+        modelOutputs = self.session.get_outputs()
+        self.outputNames = [modelOutputs[i].name for i in range(len(modelOutputs))]
 
     @staticmethod
-    def rescale_boxes(boxes, input_shape, image_shape):
-        # Rescale boxes to original image dimensions
-        input_shape = np.array([input_shape[1], input_shape[0], input_shape[1], input_shape[0]])
-        boxes = np.divide(boxes, input_shape, dtype=np.float32)
-        boxes *= np.array([image_shape[1], image_shape[0], image_shape[1], image_shape[0]])
+    def rescaleBoxes(boxes, inputShape, imageShape):
+        inputShape = np.array([inputShape[1], inputShape[0], inputShape[1], inputShape[0]])
+        boxes = np.divide(boxes, inputShape, dtype=np.float32)
+        boxes *= np.array([imageShape[1], imageShape[0], imageShape[1], imageShape[0]])
 
         return boxes

@@ -1,96 +1,77 @@
 import cv2
 import math
 from robovision import Robovision
-from robovision.utils import class_names, class_width
+from robovision.utils import classNames, classWidth
 from networktables import NetworkTables
 
-# Connect to the NetworkTables server on the roboRIO
 NetworkTables.initialize(server='roborio-1937-frc.local')
 table = NetworkTables.getTable('Vision')
 
-model_path = "models/best.onnx"
-robovision = Robovision(model_path, conf_thres=0.3, iou_thres=0.3)
+modelPath = "models/best.onnx"
+robovision = Robovision(modelPath, conf_thres=0.3, iou_thres=0.3)
 cap = cv2.VideoCapture(0)
-focal_length = 600
+focalLength = 600
 
-# Set the desired frame rate (in frames per second)
-desired_frame_rate = 5
-frame_delay = 1 / desired_frame_rate
+desiredFrameRate = 5
+frameDelay = 1 / desiredFrameRate
 
-def process_frame():
-    # Read frame from the video
+def processFrame():
     ret, frame = cap.read()
 
     if not ret:
         return None
 
-    # Update object localizer
-    boxes, scores, class_ids, masks = robovision(frame)
+    boxes, scores, classIds, masks = robovision(frame)
 
-    # Get the dimensions of the frame
-    frame_height, frame_width, _ = frame.shape
+    frameHeight, frameWidth, _ = frame.shape
 
-    # Calculate dynamic center coordinates
-    center_x = frame_width // 2
-    center_y = frame_height // 2
+    centerX = frameWidth // 2
+    centerY = frameHeight // 2
 
-    # Process object information
-    objects = []  # Clear the list for each frame
+    objects = []
     for i, box in enumerate(boxes):
-        class_id = class_ids[i]
+        classId = classIds[i]
 
-        class_name = class_names[class_id] if class_id < len(class_names) else "Unknown"
+        className = classNames[classId] if classId < len(classNames) else "Unknown"
 
-        # Get the known width based on class ID
-        known_width = class_width[class_id] if class_id < len(class_width) else 0.2  # Default to 0.2 if not found
+        knownWidth = classWidth[classId] if classId < len(classWidth) else 0.2
 
-        # Calculate object width in pixels
-        object_width_pixels = box[2] - box[0]
+        objectWidthPixels = box[2] - box[0]
 
-        # Calculate distance
-        distance = (known_width * focal_length) / object_width_pixels
+        distance = (knownWidth * focalLength) / objectWidthPixels
 
-        # Calculate angle from the center of the object to the center of the frame
-        object_center_x = (box[0] + box[2]) / 2
-        object_center_y = (box[1] + box[3]) / 2
+        objectCenterX = (box[0] + box[2]) / 2
+        objectCenterY = (box[1] + box[3]) / 2
 
-        delta_x = object_center_x - center_x
-        delta_y = object_center_y - center_y
+        deltaX = objectCenterX - centerX
+        deltaY = objectCenterY - centerY
 
-        # Calculate the deviation from the center of the screen
-        deviation = center_x - object_center_x
-        scaled_deviation = (deviation / (frame_width // 2)) * 256
+        deviation = centerX - objectCenterX
+        scaledDeviation = (deviation / (frameWidth // 2)) * 256
 
-        # Append the object information to the list
         objects.append({
-            'class_name': class_name,
+            'className': className,
             'distance': distance,
-            'angle': scaled_deviation
+            'angle': scaledDeviation
         })
 
-        # Sort objects by distance
         objects.sort(key=lambda x: x['distance'])
 
     return objects
 
-# Define class names
 while True:
-    # List to store object information
-    objects = process_frame()
+    objects = processFrame()
 
     if objects is None:
         print('Failed to read frame')
     else:
-        # Print the values in real-time
         for obj in objects:
-            print(f"{obj['class_name']}: Distance={obj['distance']:.2f} meters, Angle={obj['angle']:.2f} degrees")
+            print(f"{obj['className']}: Distance={obj['distance']:.2f} meters, Angle={obj['angle']:.2f} degrees")
 
-        # Send data to NetworkTables for the object with the lowest distance
         if objects:
-            lowest_distance_object = objects[0]
-            table.putNumber('Distance', lowest_distance_object['distance'])
-            table.putNumber('Angle', lowest_distance_object['angle'])
+            lowestDistanceObject = objects[0]
+            table.putNumber('Distance', lowestDistanceObject['distance'])
+            table.putNumber('Angle', lowestDistanceObject['angle'])
         else:
-            # If no objects detected, write "0.0" values to NetworkTables
             table.putNumber('Distance', 0.0)
             table.putNumber('Angle', 0.0)

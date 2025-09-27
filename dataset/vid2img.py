@@ -8,7 +8,7 @@ import cv2
 def main(args):
 
     if args.verbose:
-        print( "Input arguments : ", args)
+        print("Input arguments : ", args)
 
     if not os.path.exists(args.input):
         parser.error("Input video file is not found")
@@ -16,7 +16,7 @@ def main(args):
 
     if os.path.exists(args.output):
         if args.verbose:
-            print( "Remove existing output folder")
+            print("Remove existing output folder")
         shutil.rmtree(args.output)
 
     os.makedirs(args.output)
@@ -30,34 +30,34 @@ def main(args):
     frameCount = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
     if args.verbose:
-        print( frameCount)
-    maxframes = args.maxframes
+        print(frameCount)
+    maxFrames = args.maxframes
     skipDelta = 0
-    if args.maxframes and frameCount > maxframes:
-        skipDelta = frameCount / maxframes
+    if args.maxframes and frameCount > maxFrames:
+        skipDelta = frameCount / maxFrames
         if args.verbose:
-            print( "Video has {fc}, but maxframes is set to {mf}".format(fc=frameCount, mf=maxframes))
-            print( "Skip frames delta is {d}".format(d=skipDelta))
+            print("Video has {fc}, but maxframes is set to {mf}".format(fc=frameCount, mf=maxFrames))
+            print("Skip frames delta is {d}".format(d=skipDelta))
 
     frameId = 0
     rotateAngle = args.rotate if args.rotate else 0
     if rotateAngle > 0 and args.verbose:
-        print( "Rotate output frames on {deg} clock-wise".format(deg=rotateAngle))
+        print("Rotate output frames on {deg} clock-wise".format(deg=rotateAngle))
 
-    exif_model=None
+    exifModel=None
     if args.exifmodel:
         if not os.path.exists(args.exifmodel):
             parser.error("Exif model file '{f}' is not found".format(f=args.exifmodel))
             return 2
         if args.verbose:
-            print( "Use exif model from file : {f}".format(f=args.exifmodel))
+            print("Use exif model from file : {f}".format(f=args.exifmodel))
         ret = subprocess.Popen(['exiftool', '-j', os.path.abspath(args.exifmodel)],
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = ret.communicate()
         if args.verbose:
-            print( "exiftool stdout : ", out)
+            print("exiftool stdout : ", out)
         try:
-            exif_model = json.loads(out)[0]
+            exifModel = json.loads(out)[0]
         except ValueError:
             parser.error("Exif model file can not be decoded")
             return 2
@@ -66,7 +66,7 @@ def main(args):
         ret, frame = cap.read()
         # print frameId, ret, frame.shape
         if not ret:
-            print( "Failed to get the frame {f}".format(f=frameId))
+            print("Failed to get the frame {f}".format(f=frameId))
             continue
 
         # Rotate if needed:
@@ -80,29 +80,29 @@ def main(args):
                 frame = cv2.transpose(frame)
                 frame = cv2.flip(frame, 0)
 
-        fname = "frame_" + str(frameId) + ".jpg"
-        ofname = os.path.join(args.output, fname)
-        ret = cv2.imwrite(ofname, frame)
+        fName = "frame_" + str(frameId) + ".jpg"
+        ofName = os.path.join(args.output, fName)
+        ret = cv2.imwrite(ofName, frame)
         if not ret:
-            print( "Failed to write the frame {f}".format(f=frameId))
+            print("Failed to write the frame {f}".format(f=frameId))
             continue
 
         frameId += int(1 + skipDelta)
         cap.set(cv2.CAP_PROP_POS_FRAMES, frameId)
 
-    if exif_model:
+    if exifModel:
         fields = ['Model', 'Make', 'FocalLength']
-        if not write_exif_model(os.path.abspath(args.output), exif_model, fields):
-            print( "Failed to write tags to the frames")
+        if not writeExifModel(os.path.abspath(args.output), exifModel, fields):
+            print("Failed to write tags to the frames")
         # check on the first file
-        fname = os.path.join(os.path.abspath(args.output), 'frame_0.jpg')
-        cmd = ['exiftool', '-j', fname]
+        fName = os.path.join(os.path.abspath(args.output), 'frame_0.jpg')
+        cmd = ['exiftool', '-j', fName]
         for field in fields:
             cmd.append('-' + field)
         ret = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = ret.communicate()
         if args.verbose:
-            print( "exiftool stdout : ", out)
+            print("exiftool stdout : ", out)
         try:
             result = json.loads(out)[0]
             for field in fields:
@@ -116,12 +116,12 @@ def main(args):
     return 0
 
 
-def write_exif_model(folder_path, model, fields=None):
+def writeExifModel(folderPath, model, fields=None):
     cmd = ['exiftool', '-overwrite_original', '-r']
     for field in fields:
         if field in model:
             cmd.append('-' + field + "=" + model[field])
-    cmd.append(folder_path)
+    cmd.append(folderPath)
     ret = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = ret.communicate()
     return ret.returncode == 0 and len(err) == 0

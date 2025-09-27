@@ -1,7 +1,5 @@
 from ultralytics import YOLO
 
-# Load a model
-model = YOLO('best.pt')  # load a custom trained model
+model = YOLO('best.pt')
 
-# Export the model
 model.export(format='onnx', imgsz=320)
