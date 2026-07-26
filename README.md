@@ -41,14 +41,6 @@ Optional tools:
 
 `pip install labelme pynetworktables`
 
-## Object Angle Calculation Formula
-
-This document provides a simplified explanation of the angle calculation formula used in the script. The formula calculates the angle of each detected object based on its position relative to the center of the frame.
-
-## Object Center Coordinates
-
-The coordinates of the center of the detected object are calculated as follows:
-
 ```math
 O_x = \frac{\text{box}[0] + \text{box}[2]}{2}
 O_y = \frac{\text{box}[1] + \text{box}[3]}{2}
